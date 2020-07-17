@@ -32,26 +32,9 @@ while True:
     # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        #ht=(y+h)/2
-        #wt=(x+w)/2
-        #a=x*1.5
-        #b=y*1.5
-        #a=int(a)
-        #b=int(b)
-        #ht=int(ht)
-        #wt=int(wt)
-        x1=(x+w)-x
-        y1=((y+h)-y)
-        x2=(x1+(x/2))
-        y2=(y+(y1/2))
-        x2=int(x2)
-        y2=int(y2)
-        print("frame",x2,y2)
-        #print("BOUND",x,y,x+w,y+h)
-        cv2.rectangle(frame, (x2, y2), (x2+5, y2+5), (0,0, 255), 2)
-        #cv2.circle(frame, (x1,y1),6 (0, 255, 0), -1)
-
-
+        i, j = (x + (x+w)) // 2, (y +(y+h)) // 2
+# Draw a circle in the center of rectangle
+        cv2.circle(frame, center=(i,j), radius=3, color=(0,0, 255), thickness=1)
 
     if anterior != len(faces):
         anterior = len(faces)
