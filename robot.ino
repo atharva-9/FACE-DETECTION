@@ -9,12 +9,16 @@ int degs=0;
 void setup() 
     {
        // put your setup code here, to run once:
-       Serial.begin(9600);
+       Serial.begin(115200);
 
     
          pinMode(motor1_en,OUTPUT);
          pinMode(motor2_en,OUTPUT);
 //        Serial.println("WELCOME");
+analogWrite(motor1_en,150);
+analogWrite(motor2_en,150);
+
+
 
     
     }
@@ -22,16 +26,15 @@ void setup()
 
 void loop() 
      {
-      
-       if (Serial.available()>=0) 
-       {
-    String data = Serial.readStringUntil('\n');
-    delay(500);
-    degs=data.toInt();
-//    Serial.println(degs);
-       }
-
-        if((5>degs>0)||(90>degs>85))
+       if (Serial.available()>0) 
+      {
+String   data = Serial.readStringUntil("\n");
+    degs=data.toFloat();
+//    Serial.println(degs); 
+      }
+       
+  
+        if((4.99>degs>0.0)||(90.0>degs>85.0))
           {
 //            Serial.println("UP");
 //           delay(500);
@@ -39,18 +42,18 @@ void loop()
             
           }
 
-       else  if ((50>degs)&&(degs>5))
+       else  if ((50.0>degs)&&(degs>=5.0))
           {
 //            Serial.println("Right");
 //             delay(500);
-             right();
+             left();
           }
 
-       else  if ((50<degs)&&(degs<85))
+       else  if ((50.0<degs)&&(degs<=85.0))
            {
-//              Serial.println("Left");
+//    Serial.println("Left");
 //              delay(500);
-              left();
+              right();
            }
 
        
@@ -62,7 +65,7 @@ void loop()
 
 
      }
-
+     
      void forward()
      {
         analogWrite(motor1_en,200);
