@@ -5,23 +5,37 @@ import schedule
 import logging as log
 import datetime as dt
 import time
+import keyboard
 from math import atan2
 from math import degrees
+import math 
 degs=0
 rads=0
+
 cascPath = "haarcascade_frontalface_default.xml"
 faceCascade = cv2.CascadeClassifier(cascPath)
 log.basicConfig(filename='webcam.log',level=log.INFO)
-ser=serial.Serial('COM4',9600)
+ser = serial.Serial(
+  port='com4',
+  baudrate = 115200,
+  parity=serial.PARITY_NONE,
+  stopbits=serial.STOPBITS_ONE,
+  bytesize=serial.EIGHTBITS,
+  timeout=1
+  )
+time.sleep(0.7)
 video_capture = cv2.VideoCapture(0)
 anterior = 0
 
 def serwrt():
-    ser.write(int(degs))
+    ser.write(degs.encode('utf-8'))
+    time.sleep(1)
 def serread():
     line = ser.readline().decode('utf-8').rstrip()
+    #line = ser.readline()
     print(line)
-
+def prnt():
+    print('DEGREES:- ',degs)
     
 while True:
     if not video_capture.isOpened():
@@ -39,8 +53,11 @@ while True:
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(40, 40)
+        
     )
-
+    if keyboard.is_pressed('x'):
+        serread()
+        time.sleep(0.5)
     # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
@@ -53,6 +70,9 @@ while True:
         degs = degrees(rads)
         if degs < 0 :
            degs +=90
+        degs=math.trunc(degs)
+        degs=str(degs)
+        
         (serwrt())
 
     if anterior != len(faces):
@@ -70,7 +90,7 @@ while True:
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
-    
+    #schedule.every(2).seconds.do(prnt)
     print("Degrees:",degs)
     #print("Radians",rads)
     
